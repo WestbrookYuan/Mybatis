@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yty.mybatis.mapper.CarMapper">
+    <select id="selectByMultiCondition" resultType="Car">
+        select *
+        from t_car where 1=1
+            <!--
+            1. test 是必须的
+            2. if 如果是true就会拼接到语句中
+            3.可以使用arg0,param注解（如果有）,pojo的属性名
+            4. mybatis不能使用&&，与标签冲突，mybatis提供了and作为与-->
+        <if test="brand != null and brand != ''">
+            and brand like "%"#{brand}"%"
+        </if>
+        <if test="guidePrice != null">
+            and guide_price > #{guidePrice}
+        </if>
+
+        <if test="carType != null and carType != ''">
+            and car_type = #{carType};
+        </if>
+    </select>
+
+
+    <select id="selectByMultiConditionWithWhere" resultType="car">
+        select * from t_car
+        <!--负责where子句动态生成的-->
+        <where>
+            <if test="brand != null and brand != ''">
+                and brand like "%"#{brand}"%"
+            </if>
+            <if test="guidePrice != null">
+                and guide_price > #{guidePrice}
+            </if>
+
+            <if test="carType != null and carType != ''">
+                and car_type = #{carType};
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectByMultiConditionWithTrim" resultType="car">
+        select *
+        from t_car
+        <trim prefix="where" suffix="" prefixOverrides="" suffixOverrides="and|or">
+            <if test="brand != null and brand != ''">
+                brand like "%"#{brand}"%" and
+            </if>
+            <if test="guidePrice != null">
+                guide_price > #{guidePrice} and
+            </if>
+
+            <if test="carType != null and carType != ''">
+                car_type = #{carType};
+            </if>
+        </trim>
+    </select>
+    
+    <select id="selectByChoose" resultType="car">
+        select * from t_car
+        <where>
+            <choose>
+                <when test="brand != null and brand != ''">
+                    brand like "%"#{brand}"%"
+                </when>
+                <when test="guidePrice != null">
+                    guide_price > #{guidePrice}
+                </when>
+                <when test="carType != null and carType != ''">
+                    car_type = #{carType}
+                </when>
+                <otherwise></otherwise>
+            </choose>
+        </where>
+
+    </select>
+
+
+
+    <update id="updateById">
+        update t_car
+        set
+            carnum=#{carnum},
+            brand=#{brand},
+            guide_price=#{guidePrice},
+            produce_time=#{produceTime},
+            car_type=#{carType}
+        where id=#{id}
+    </update>
+
+    <update id="updateBySet">
+        update t_car
+        <set>
+            <if test="carnum != null ">
+                carnum = #{carnum},
+            </if>
+            <if test="brand != null and brand != ''">
+                brand = #{brand},
+            </if>
+            <if test="guidePrice != null">
+                guide_price = #{guidePrice},
+            </if>
+            <if test="produceTime != null and produceTime != ''">
+                produce_time = #{produceTime},
+            </if>
+            <if test="carType != null and carType != ''">
+                car_type = #{carType}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+
+    <delete id="deleteByIds" >
+        delete from t_car where id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+    </delete>
+
+    <delete id="deleteByIds2" >
+        delete from t_car where
+        <foreach collection="ids" item="id" separator="or" >
+            id=#{id}
+        </foreach>
+    </delete>
+
+
+    <insert id="insertBatchCars">
+        insert into t_car values
+            <foreach collection="cars" item="car" separator=",">
+                (null, #{car.carnum}, #{car.brand}, #{car.guidePrice}, #{car.produceTime}, #{car.carType})
+            </foreach>
+    </insert>
+</mapper>

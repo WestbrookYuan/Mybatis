@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="car">
+    <insert id="insertCar">
+        insert into t_car(id, carnum, brand, guide_price, produce_time, car_type)
+        values (null, 300, 'Toyota 4Runner', 30.00, '2019-10-11', 'gas');
+    </insert>
+
+</mapper>

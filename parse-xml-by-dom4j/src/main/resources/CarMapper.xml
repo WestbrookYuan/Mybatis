@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testEnvironment">
+    <insert id="insertCar">
+        insert into t_car(id, carnum, brand, guide_price, produce_time, car_type)
+        values (null, #{carNum}, #{brand}, #{guidePrice}, #{produceTime}, #{carType});
+    </insert>
+
+    <select id="selectCarById" resultType="com.yty.mybatis.pojo.Car">
+        select id,
+               carnum as carNum,
+               brand,
+               produce_time as produceTime,
+               guide_price as guidePrice,
+               car_type as carType
+        from t_car
+        where id=#{id};
+    </select>
+</mapper>

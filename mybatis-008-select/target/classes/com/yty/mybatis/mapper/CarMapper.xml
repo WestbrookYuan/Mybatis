@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yty.mybatis.mapper.CarMapper">
+<!--    定义结果映射 指定数据库的字段名和类的属性名-->
+<!--    type 用来指定pojo类的雷鸣-->
+<!--    id指定resultmap的唯一标识-->
+    <resultMap id="carResultMap" type="Car">
+<!--        property是类的属性名 coloum是表的列名-->
+<!--        一般都有主键，符合数据库第一范式-->
+<!--        如果有主键，id列提高查询效率-->
+        <id property="id" column="id"/>
+        <result property="carnum" column="carnum"/>
+        <result property="guidePrice" column="guide_price"/>
+        <result property="produceTime" column="produce_time"/>
+        <result property="carType" column="car_type"/>
+    </resultMap>
+    
+    <sql id="carColumnName">
+        id,
+        carnum,
+        brand,
+        guide_price as guidePrice,
+        produce_time as produceTime,
+        car_type as carType
+    </sql>
+    <select id="selectById" resultType="car">
+        select
+            <include refid="carColumnName"/>
+        from t_car where id=#{id};
+    </select>
+    <select id="selectAll" resultType="car">
+        select
+            <include refid="carColumnName"/>
+        from t_car;
+    </select>
+
+    <select id="selectByBrandLike" resultType="car">
+        select
+            <include refid="carColumnName"/>
+        from t_car
+        where brand like "%"#{brand}"%";
+    </select>
+    <select id="selectByIdRetMap" resultType="map">
+        select
+            <include refid="carColumnName"/>
+        from t_car where id=#{id};
+    </select>
+
+    <select id="selectAllRetList" resultType="map">
+        select
+            <include refid="carColumnName"/>
+        from t_car;
+    </select>
+
+    <select id="selectAllRetMap" resultType="map">
+        select
+            <include refid="carColumnName"/>
+        from t_car;
+    </select>
+
+<!--    resultMap的值是指定的resultMap的id-->
+    <select id="selectAllByResultMap" resultMap="carResultMap" >
+        select
+            *
+        from t_car;
+    </select>
+
+    <select id="selectAllBymapUnderscoreToCamelCase" >
+        select
+            *
+        from t_car;
+    </select>
+    <select id="selectTotal" resultType="long">
+        select count(*) from t_car;
+    </select>
+</mapper>

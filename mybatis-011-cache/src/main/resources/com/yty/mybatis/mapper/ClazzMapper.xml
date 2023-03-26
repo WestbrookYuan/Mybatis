@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yty.mybatis.mapper.ClazzMapper">
+    <insert id="insertClazz">
+        insert into t_clazz (cid, cname)
+        values (#{cid}, #{cname});
+    </insert>
+    <select id="selectByCid" resultType="Clazz">
+        select * from t_clazz where cid=#{cid};
+    </select>
+</mapper>
