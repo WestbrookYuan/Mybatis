@@ -114,34 +114,30 @@ Mybatis缓存机制
 
          ```java
              @Test
-             public void testSelectByCid(){
+             public void testCacheInDiffTable(){
                  SqlSession sqlSession = SqlSessionUtil.openSession();
                  ClazzMapper mapper = sqlSession.getMapper(ClazzMapper.class);
-                 Clazz clazz = mapper.selectByCid(1000);
-                 System.out.println(clazz);
-                 int count = mapper.insertClazz(1002, "NZ173");
+                 CarMapper mapper1 = sqlSession.getMapper(CarMapper.class);
+                 System.out.println(mapper1.selectById(65L));
+                 int count = mapper.insertClazz(1003, "NZ 174");
+                 System.out.println(mapper1.selectById(65L));
                  sqlSession.commit();
-                 Clazz clazz1 = mapper.selectByCid(1000);
-                 System.out.println(clazz1);
                  sqlSession.close();
-         
              }
          ```
 
          ```txt
-         2023-03-26 12:32:41.138 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - ==>  Preparing: select * from t_clazz where cid=?;
-         2023-03-26 12:32:41.152 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - ==> Parameters: 1000(Integer)
-         2023-03-26 12:32:41.165 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - <==      Total: 1
-         Clazz{cid=1000, cname='NZ 171', students=null}
-         2023-03-26 12:32:41.167 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - ==>  Preparing: insert into t_clazz (cid, cname) values (?, ?);
-         2023-03-26 12:32:41.167 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - ==> Parameters: 1002(Integer), NZ173(String)
-         2023-03-26 12:32:41.177 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - <==    Updates: 1
-         2023-03-26 12:32:41.177 [main] DEBUG org.apache.ibatis.transaction.jdbc.JdbcTransaction - Committing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@38f116f6]
-         2023-03-26 12:32:41.181 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - ==>  Preparing: select * from t_clazz where cid=?;
-         2023-03-26 12:32:41.181 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - ==> Parameters: 1000(Integer)
-         2023-03-26 12:32:41.182 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.selectByCid - <==      Total: 1
-         Clazz{cid=1000, cname='NZ 171', students=null}
-         
+         2023-03-26 12:43:35.673 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - ==>  Preparing: select * from t_car where id= ?;
+         2023-03-26 12:43:35.689 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - ==> Parameters: 65(Long)
+         2023-03-26 12:43:35.702 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - <==      Total: 1
+         Car{id=65, carnum=1231, brand='Audi Q2L E-tron', guidePrice=100.0, produceTime='2023-02-04', carType='ele'}
+         2023-03-26 12:43:35.707 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - ==>  Preparing: insert into t_clazz (cid, cname) values (?, ?);
+         2023-03-26 12:43:35.708 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - ==> Parameters: 1003(Integer), NZ 174(String)
+         2023-03-26 12:43:35.709 [main] DEBUG com.yty.mybatis.mapper.ClazzMapper.insertClazz - <==    Updates: 1
+         2023-03-26 12:43:35.709 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - ==>  Preparing: select * from t_car where id= ?;
+         2023-03-26 12:43:35.710 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - ==> Parameters: 65(Long)
+         2023-03-26 12:43:35.711 [main] DEBUG com.yty.mybatis.mapper.CarMapper.selectById - <==      Total: 1
+         Car{id=65, carnum=1231, brand='Audi Q2L E-tron', guidePrice=100.0, produceTime='2023-02-04', carType='ele'}
          ```
 
       3. 

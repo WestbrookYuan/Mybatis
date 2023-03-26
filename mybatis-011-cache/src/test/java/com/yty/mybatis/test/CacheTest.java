@@ -21,7 +21,6 @@ public class CacheTest {
         CarMapper mapper = sqlSession.getMapper(CarMapper.class);
         Car car = mapper.selectById(65L);
         System.out.println(car);
-        sqlSession.clearCache();
 
         CarMapper mapper1 = sqlSession.getMapper(CarMapper.class);
         Car car1 = mapper1.selectById(65L);
@@ -54,6 +53,31 @@ public class CacheTest {
         Clazz clazz1 = mapper.selectByCid(1000);
         System.out.println(clazz1);
         sqlSession.close();
+    }
 
+
+    @Test
+    public void testClearCache(){
+        SqlSession sqlSession = SqlSessionUtil.openSession();
+        CarMapper mapper = sqlSession.getMapper(CarMapper.class);
+        Car car = mapper.selectById(65L);
+        System.out.println(car);
+        sqlSession.clearCache();
+
+        CarMapper mapper1 = sqlSession.getMapper(CarMapper.class);
+        Car car1 = mapper1.selectById(65L);
+        System.out.println(car1);
+        sqlSession.close();
+    }
+    @Test
+    public void testCacheInDiffTable(){
+        SqlSession sqlSession = SqlSessionUtil.openSession();
+        ClazzMapper mapper = sqlSession.getMapper(ClazzMapper.class);
+        CarMapper mapper1 = sqlSession.getMapper(CarMapper.class);
+        System.out.println(mapper1.selectById(65L));
+        int count = mapper.insertClazz(1003, "NZ 174");
+        System.out.println(mapper1.selectById(65L));
+        sqlSession.commit();
+        sqlSession.close();
     }
 }
