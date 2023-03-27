@@ -1,0 +1,6 @@
+com/yty/mybatis/mapper/CarMapper.class
+com/yty/mybatis/utils/SqlSessionUtil.class
+com/yty/mybatis/pojo/Car.class
+com/yty/mybatis/pojo/Student.class
+com/yty/mybatis/pojo/Clazz.class
+com/yty/mybatis/mapper/ClazzMapper.class

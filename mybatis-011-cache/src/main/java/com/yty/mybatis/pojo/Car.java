@@ -1,5 +1,6 @@
 package com.yty.mybatis.pojo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /*
@@ -9,7 +10,7 @@ import java.util.Objects;
 * @since:1.0
 *
 * */
-public class Car {
+public class Car implements Serializable {
     private Long id;
     private Integer carnum;
     private String brand;
@@ -100,4 +101,5 @@ public class Car {
     public void setCarType(String carType) {
         this.carType = carType;
     }
+
 }

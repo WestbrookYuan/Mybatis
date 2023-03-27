@@ -5,7 +5,7 @@
 <mapper namespace="com.yty.mybatis.mapper.CarMapper">
     <insert id="insertCar">
         insert into t_car
-        values (null, #{carnum}, #{brand}, #{guideMoney}, #{produceTime}, #{carType});
+        values (null, #{carnum}, #{brand}, #{guidePrice}, #{produceTime}, #{carType});
     </insert>
 
     <delete id="deleteById">
@@ -15,7 +15,7 @@
         update t_car
         set carnum=#{carnum},
             brand=#{brand},
-            guide_price=#{guideMoney},
+            guide_price=#{guidePrice},
             produce_time=#{produceTime},
             car_type=#{carType}
         where id=#{id};
@@ -24,7 +24,7 @@
         select id,
                carnum,
                brand,
-               guide_price as guideMoney,
+               guide_price as guidePrice,
                produce_time as produceTime,
                car_type as carType
         from t_car
@@ -34,7 +34,7 @@
         select id,
                carnum,
                brand,
-               guide_price as guideMoney,
+               guide_price as guidePrice,
                produce_time as produceTime,
                car_type as carType
         from t_car;

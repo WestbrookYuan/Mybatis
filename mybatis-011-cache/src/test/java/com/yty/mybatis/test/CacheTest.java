@@ -42,22 +42,9 @@ public class CacheTest {
         sqlSession2.close();
     }
 
-    @Test
-    public void testSelectByCid(){
-        SqlSession sqlSession = SqlSessionUtil.openSession();
-        ClazzMapper mapper = sqlSession.getMapper(ClazzMapper.class);
-        Clazz clazz = mapper.selectByCid(1000);
-        System.out.println(clazz);
-        int count = mapper.insertClazz(1002, "NZ173");
-        sqlSession.commit();
-        Clazz clazz1 = mapper.selectByCid(1000);
-        System.out.println(clazz1);
-        sqlSession.close();
-    }
-
 
     @Test
-    public void testClearCache(){
+    public void testClearCacheCommand(){
         SqlSession sqlSession = SqlSessionUtil.openSession();
         CarMapper mapper = sqlSession.getMapper(CarMapper.class);
         Car car = mapper.selectById(65L);
@@ -69,8 +56,21 @@ public class CacheTest {
         System.out.println(car1);
         sqlSession.close();
     }
+
     @Test
-    public void testCacheInDiffTable(){
+    public void testClearCacheInSameTable(){
+        SqlSession sqlSession = SqlSessionUtil.openSession();
+        ClazzMapper mapper = sqlSession.getMapper(ClazzMapper.class);
+        Clazz clazz = mapper.selectByCid(1000);
+        System.out.println(clazz);
+        int count = mapper.insertClazz(1002, "NZ173");
+        sqlSession.commit();
+        Clazz clazz1 = mapper.selectByCid(1000);
+        System.out.println(clazz1);
+        sqlSession.close();
+    }
+    @Test
+    public void testClearCacheInDiffTable(){
         SqlSession sqlSession = SqlSessionUtil.openSession();
         ClazzMapper mapper = sqlSession.getMapper(ClazzMapper.class);
         CarMapper mapper1 = sqlSession.getMapper(CarMapper.class);
@@ -80,4 +80,47 @@ public class CacheTest {
         sqlSession.commit();
         sqlSession.close();
     }
+
+    @Test
+    public void testCacheInSqlFactoryWithoutClose() throws IOException {
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));
+        SqlSession sqlSession1 = sqlSessionFactory.openSession();
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        CarMapper mapper1 = sqlSession1.getMapper(CarMapper.class);
+        CarMapper mapper2 = sqlSession2.getMapper(CarMapper.class);
+        //the car has been cached in sqlSession1 (一级缓存)
+        System.out.println(mapper1.selectById(65L));
+
+        //if sqlSession not been closed, the car will not be cached into SqlSessionFactory
+
+        //the car has been cached in sqlSession1 (一级缓存)
+        System.out.println(mapper2.selectById(65L));
+
+        //the car has been cached in SqlSessionFactory (二级缓存) from sqlSession1
+        sqlSession1.close();
+        //the car has been cached in SqlSessionFactory (二级缓存) from sqlSession2
+        sqlSession2.close();
+    }
+
+    @Test
+    public void testCacheInSqlFactoryWithClose() throws IOException {
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));
+        SqlSession sqlSession1 = sqlSessionFactory.openSession();
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        CarMapper mapper1 = sqlSession1.getMapper(CarMapper.class);
+        CarMapper mapper2 = sqlSession2.getMapper(CarMapper.class);
+        //the car has been cached in sqlSession1 (一级缓存)
+        System.out.println(mapper1.selectById(65L));
+
+        //if sqlSession not been closed, the car will not be cached into SqlSessionFactory
+        //the car has been cached in SqlSessionFactory (二级缓存) from sqlSession1
+        sqlSession1.close();
+
+        //the car has been cached in sqlSession1 (一级缓存)
+        System.out.println(mapper2.selectById(65L));
+
+        //the car has been cached in SqlSessionFactory (二级缓存) from sqlSession2
+        sqlSession2.close();
+    }
+
 }

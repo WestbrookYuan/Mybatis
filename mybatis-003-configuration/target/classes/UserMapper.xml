@@ -9,7 +9,7 @@
                carnum as carNum,
                brand,
                produce_time as produceTime,
-               guide_price as guideMoney,
+               guide_price as guidePrice,
                car_type as carType
         from t_car;
     </select>
