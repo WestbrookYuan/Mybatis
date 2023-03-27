@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mybatis-014-page" />
+        <module name="mybatis-015-zhujie" />
         <module name="mybatis-009-dynamic-sql" />
         <module name="godbatis" />
         <module name="test-maven" />
